@@ -15,10 +15,12 @@ struct TaskListView: View {
             ForEach(viewModel.getAllTasks(), id: \.id) { task in
                 NavigationLink(destination: TaskDetailView(task: task, viewModel: viewModel)) {
                     Text(task.title)
+                        .frame(width:300, height:30)
                 }
             }
         }
-        .border(Color.blue, width: 5)
+        .frame(width: 300, height: 600)
+        .border(Color.teal, width: 5)
         .background(Color.white)
     }
 }

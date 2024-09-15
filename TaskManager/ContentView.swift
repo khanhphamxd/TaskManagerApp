@@ -11,26 +11,32 @@ struct ContentView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
-                TaskListView(viewModel: viewModel)
-                HStack {
-                    NavigationLink("Add New Task", destination: AddTaskView(viewModel: viewModel))
-                        .frame(height: 30)
-                        .padding(5)
-                        .background(Color.cyan)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .border(Color.blue, width: 2)
-                        .foregroundColor(.white)
-                    NavigationLink("Completed Tasks", destination: CompletedTasksView(viewModel: viewModel))
-                        .frame(height: 30)
-                        .padding(5)
-                        .background(Color.cyan)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .border(Color.blue, width: 2)
-                        .foregroundColor(.white)
+            ZStack {
+                Color("bgcolor")
+                    .edgesIgnoringSafeArea(.all)
+                VStack {
+                    Text("TaskManager").font(.largeTitle)
+                        .fontWeight(.heavy)
+                        .fontDesign(.rounded)
+                    TaskListView(viewModel: viewModel)
+                    HStack {
+                        NavigationLink("Add New Task", destination: AddTaskView(viewModel: viewModel))
+                            .frame(height: 30)
+                            .padding(5)
+                            .background(Color.cyan)
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .border(Color.blue, width: 2)
+                            .foregroundColor(.white)
+                        NavigationLink("Completed Tasks", destination: CompletedTasksView(viewModel: viewModel))
+                            .frame(height: 30)
+                            .padding(5)
+                            .background(Color.cyan)
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .border(Color.blue, width: 2)
+                            .foregroundColor(.white)
+                    }
                 }
             }
-            .navigationTitle("TaskManager")
         }
     }
 }

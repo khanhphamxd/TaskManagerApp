@@ -16,7 +16,12 @@ struct AddTaskView: View {
     @State private var category: String = "Work"
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
+            Spacer()
+            Text("Add task")
+                .font(.title)
+                .fontWeight(.bold)
+                .padding(.bottom, 35)
             TextField("Task Title", text: $title)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
@@ -48,7 +53,6 @@ struct AddTaskView: View {
             
             Spacer()
         }
-        .navigationTitle("Add Task")
         .background(Color("bgcolor"))
     }
 }
