@@ -8,11 +8,11 @@
 import Foundation
 
 class TaskViewModel: ObservableObject {
-    @Published private(set) var tasks: [TaskDetail] = []
-    @Published private(set) var completedTasks: [TaskDetail] = []
+    @Published private(set) var tasks: [any TaskDetail] = []
+    @Published private(set) var completedTasks: [any TaskDetail] = []
 
     func addTask(title: String, description: String, type: String) {
-        let task: TaskDetail
+        let task: any TaskDetail
         switch type {
         case "Work":
             task = WorkTask(title: title, description: description)
@@ -26,7 +26,7 @@ class TaskViewModel: ObservableObject {
         tasks.append(task)
     }
 
-    func markTaskAsComplete(_ task: TaskDetail) {
+    func markTaskAsComplete(_ task: any TaskDetail) {
         if let index = tasks.firstIndex(where: { $0.id == task.id }) {
             var completedTask = tasks[index]
             completedTask.isCompleted = true
@@ -35,15 +35,15 @@ class TaskViewModel: ObservableObject {
         }
     }
 
-    func removeTask(_ task: TaskDetail) {
+    func removeTask(_ task: any TaskDetail) {
         tasks.removeAll { $0.id == task.id }
     }
 
-    func getAllTasks() -> [TaskDetail] {
+    func getAllTasks() -> [any TaskDetail] {
         return tasks
     }
 
-    func getCompletedTasks() -> [TaskDetail] {
+    func getCompletedTasks() -> [any TaskDetail] {
         return completedTasks
     }
 }

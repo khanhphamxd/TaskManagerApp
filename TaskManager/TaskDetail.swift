@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol TaskDetail: Codable {
+protocol TaskDetail: Identifiable {
     var id: UUID { get }
     var title: String { get }
     var description: String { get }
