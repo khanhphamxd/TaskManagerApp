@@ -7,49 +7,34 @@
 
 import Foundation
 
-protocol TaskDetail: Identifiable, Codable {
+protocol TaskDetail: Codable {
     var id: UUID { get }
     var title: String { get }
     var description: String { get }
-    var category: String { get }
+    var type: String { get }
     var isCompleted: Bool { get set }
 }
 
-class WorkTask: TaskDetail {
+struct WorkTask: TaskDetail {
     var id = UUID()
     var title: String
     var description: String
-    var category: String = "Work"
-    var isCompleted: Bool = false
-    
-    init(title: String, description: String) {
-        self.title = title
-        self.description = description
-    }
+    var type = "Work"
+    var isCompleted = false
 }
 
-class PersonalTask: TaskDetail {
+struct PersonalTask: TaskDetail {
     var id = UUID()
     var title: String
     var description: String
-    var category: String = "Personal"
-    var isCompleted: Bool = false
-    
-    init(title: String, description: String) {
-        self.title = title
-        self.description = description
-    }
+    var type = "Personal"
+    var isCompleted = false
 }
 
-class SocialTask: TaskDetail {
+struct SocialTask: TaskDetail {
     var id = UUID()
     var title: String
     var description: String
-    var category: String = "Social"
-    var isCompleted: Bool = false
-    
-    init(title: String, description: String) {
-        self.title = title
-        self.description = description
-    }
+    var type = "Social"
+    var isCompleted = false
 }
