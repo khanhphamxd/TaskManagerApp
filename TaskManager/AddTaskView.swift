@@ -8,45 +8,23 @@
 import SwiftUI
 
 struct AddTaskView: View {
-    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: TaskViewModel
-    
-    @State private var title: String = ""
-    @State private var description: String = ""
-    @State private var category: String = "Work"
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            TextField("Task Title", text: $title)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            TextField("Task Description", text: $description)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            Picker("Category", selection: $category) {
-                Text("Work").tag("Work")
-                Text("Personal").tag("Personal")
-                Text("Social").tag("Social")
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
 
-            Button(action: {
-                viewModel.addTask(title: title, description: description, category: category)
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("Add Task")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+    @State private var taskTitle = ""
+    @State private var taskDescription = ""
+    @State private var taskType = ""
+
+    var body: some View {
+        Form {
+            Section(header: Text("New Task")) {
+                TextField("Title", text: $taskTitle)
+                TextField("Description", text: $taskDescription)
+                TextField("Type (Work, Personal, Social)", text: $taskType)
+                
+                Button("Add Task") {
+                    viewModel.addTask(title: taskTitle, description: taskDescription, type: taskType)
+                }
             }
-            .padding()
-            
-            Spacer()
         }
         .navigationTitle("Add Task")
     }
@@ -57,3 +35,4 @@ struct AddTaskView_Previews: PreviewProvider {
         AddTaskView(viewModel: TaskViewModel())
     }
 }
+
