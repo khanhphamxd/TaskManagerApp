@@ -12,7 +12,7 @@ struct TaskListView: View {
 
     var body: some View {
         List {
-            ForEach(viewModel.getAllTasks(), id: \.id) { task in
+            ForEach(viewModel.getAllTasks()) { task in
                 Text(task.title)
             }
         }
