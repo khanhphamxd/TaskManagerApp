@@ -17,6 +17,7 @@ struct TaskListView: View {
             }
         }
         .border(Color.blue, width: 5)
+        .background(Color.white)
     }
 }
 

@@ -30,7 +30,7 @@ struct ContentView: View {
                         .foregroundColor(.white)
                 }
             }
-            .navigationTitle("Task Manager")
+            .navigationTitle("TaskManager")
         }
     }
 }
