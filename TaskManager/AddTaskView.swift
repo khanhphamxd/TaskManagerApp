@@ -8,25 +8,48 @@
 import SwiftUI
 
 struct AddTaskView: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: TaskViewModel
-
-    @State private var taskTitle = ""
-    @State private var taskDescription = ""
-    @State private var taskType = ""
-
+    
+    @State private var title: String = ""
+    @State private var description: String = ""
+    @State private var category: String = "Work"
+    
     var body: some View {
-        Form {
-            Section(header: Text("New Task")) {
-                TextField("Title", text: $taskTitle)
-                TextField("Description", text: $taskDescription)
-                TextField("Type (Work, Personal, Social)", text: $taskType)
-                
-                Button("Add Task") {
-                    viewModel.addTask(title: taskTitle, description: taskDescription, type: taskType)
-                }
+        VStack(alignment: .leading) {
+            TextField("Task Title", text: $title)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal)
+            
+            TextField("Task Description", text: $description)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal)
+            
+            Picker("Category", selection: $category) {
+                Text("Work").tag("Work")
+                Text("Personal").tag("Personal")
+                Text("Social").tag("Social")
             }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding()
+
+            Button(action: {
+                viewModel.addTask(title: title, description: description, category: category)
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Text("Add Task")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+            .padding()
+            
+            Spacer()
         }
         .navigationTitle("Add Task")
+        .background(Color("bgcolor"))
     }
 }
 
@@ -35,4 +58,3 @@ struct AddTaskView_Previews: PreviewProvider {
         AddTaskView(viewModel: TaskViewModel())
     }
 }
-

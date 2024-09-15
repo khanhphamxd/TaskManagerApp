@@ -11,9 +11,9 @@ class TaskViewModel: ObservableObject {
     @Published private(set) var tasks: [any TaskDetail] = []
     @Published private(set) var completedTasks: [any TaskDetail] = []
 
-    func addTask(title: String, description: String, type: String) {
+    func addTask(title: String, description: String, category: String) {
         let task: any TaskDetail
-        switch type {
+        switch category {
         case "Work":
             task = WorkTask(title: title, description: description)
         case "Personal":

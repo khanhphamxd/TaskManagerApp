@@ -13,7 +13,9 @@ struct TaskListView: View {
     var body: some View {
         List {
             ForEach(viewModel.getAllTasks(), id: \.id) { task in
-                Text(task.title)
+                NavigationLink(destination: TaskDetailView(task: task, viewModel: viewModel)) {
+                    Text(task.title)
+                }
             }
         }
         .border(Color.blue, width: 5)
