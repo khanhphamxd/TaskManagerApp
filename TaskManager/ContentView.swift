@@ -12,54 +12,11 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Task Manager")
-                    .font(.largeTitle)
-                    .padding()
-
-                List {
-                    ForEach(viewModel.getAllTasks(), id: \.id) { task in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(task.title)
-                                    .font(.headline)
-                                Text(task.description)
-                                    .font(.subheadline)
-                            }
-                            Spacer()
-                            Text(task.category)
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                            Button(action: {
-                                viewModel.markTaskAsComplete(task)
-                            }) {
-                                Text("Complete")
-                                    .foregroundColor(.blue)
-                            }
-                        }
-                    }
-                }
-
-                NavigationLink(destination: CompletedTasksView(viewModel: viewModel)) {
-                    Text("View Completed Tasks")
-                        .font(.headline)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-                .padding()
-
-                NavigationLink(destination: AddTaskView(viewModel: viewModel)) {
-                    Text("Add New Task")
-                        .font(.headline)
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-                .padding()
+                TaskListView(viewModel: viewModel)
+                NavigationLink("Add New Task", destination: AddTaskView(viewModel: viewModel))
+                NavigationLink("Completed Tasks", destination: CompletedTasksView(viewModel: viewModel))
             }
-            .navigationTitle("Tasks")
+            .navigationTitle("Task Manager")
         }
     }
 }
@@ -69,4 +26,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 
