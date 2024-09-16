@@ -13,7 +13,10 @@ struct AddTaskView: View {
     
     @State private var title: String = ""
     @State private var description: String = ""
-    @State private var category: String = "Work"
+    @State private var type: String = "Work"
+    
+    @State private var showAlert = false
+    @State private var validationError: TaskError?
     
     var body: some View {
         VStack(alignment: .center) {
@@ -30,7 +33,7 @@ struct AddTaskView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding(.horizontal)
             
-            Picker("Category", selection: $category) {
+            Picker("Category", selection: $type) {
                 Text("Work").tag("Work")
                 Text("Personal").tag("Personal")
                 Text("Social").tag("Social")
@@ -39,16 +42,37 @@ struct AddTaskView: View {
             .padding()
 
             Button(action: {
-                viewModel.addTask(title: title, description: description, category: category)
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("Add Task")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
+                            do {
+                                // Validate the input
+                                try viewModel.validateTask(title: title, description: description)
+                                // If validation is successful, add the task
+                                viewModel.addTask(title: title, description: description, type: type)
+                                presentationMode.wrappedValue.dismiss()
+                            } catch let error as TaskError {
+                                // Catch and set the validation error if thrown
+                                validationError = error
+                                showAlert = true
+                            } catch {
+                                // Mark unexpected errors
+                                validationError = .unknown
+                                showAlert = true
+                            }
+                        }) {
+                            Text("Add Task")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .padding()
+                        .alert(isPresented: $showAlert) {
+                            Alert(
+                                title: Text("Error"),
+                                message: Text(validationError?.errorDescription ?? "Unknown error"),
+                                dismissButton: .default(Text("OK"))
+                            )
+                        }
             .padding()
             
             Spacer()

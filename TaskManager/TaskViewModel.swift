@@ -11,9 +11,18 @@ class TaskViewModel: ObservableObject {
     @Published private(set) var tasks: [any TaskDetail] = []
     @Published private(set) var completedTasks: [any TaskDetail] = []
 
-    func addTask(title: String, description: String, category: String) {
+    func validateTask(title: String, description: String) throws {
+        if title.isEmpty {
+            throw TaskError.missingTitle
+        }
+        if description.isEmpty {
+            throw TaskError.missingDescription
+        }
+    }
+    
+    func addTask(title: String, description: String, type: String) {
         let task: any TaskDetail
-        switch category {
+        switch type {
         case "Work":
             task = WorkTask(title: title, description: description)
         case "Personal":

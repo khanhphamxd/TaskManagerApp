@@ -31,13 +31,24 @@
       shouldAutocreateTestPlan = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO"
+            skipped = "YES"
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FB5EDF462C92FB9100EA2733"
                BuildableName = "TaskManagerTests.xctest"
                BlueprintName = "TaskManagerTests"
+               ReferencedContainer = "container:TaskManager.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FB5941EF2C97FCCA00D235BC"
+               BuildableName = "TaskManagerTest.xctest"
+               BlueprintName = "TaskManagerTest"
                ReferencedContainer = "container:TaskManager.xcodeproj">
             </BuildableReference>
          </TestableReference>

@@ -28,7 +28,9 @@ struct CompletedTasksView: View {
                             }
                         }
                     }
-                    .frame(width: 300, height: 700)
+                    .frame(width: 300, height: 600)
+                    .border(Color.green, width: 10)
+                    .background(Color("bgccolor"))
                 }
             }
         }

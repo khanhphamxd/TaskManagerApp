@@ -13,6 +13,8 @@ protocol TaskDetail: Identifiable {
     var description: String { get }
     var type: String { get }
     var isCompleted: Bool { get set }
+    
+    init(id: UUID, title: String, description: String, type: String, isCompleted: Bool)
 }
 
 struct WorkTask: TaskDetail {
@@ -21,6 +23,14 @@ struct WorkTask: TaskDetail {
     var description: String
     var type = "Work"
     var isCompleted = false
+    
+    public init(id: UUID = UUID(), title: String, description: String, type: String = "Work", isCompleted: Bool = false) {
+            self.id = id
+            self.title = title
+            self.description = description
+            self.type = type
+            self.isCompleted = isCompleted
+        }
 }
 
 struct PersonalTask: TaskDetail {
@@ -29,6 +39,14 @@ struct PersonalTask: TaskDetail {
     var description: String
     var type = "Personal"
     var isCompleted = false
+    
+    public init(id: UUID = UUID(), title: String, description: String, type: String = "Work", isCompleted: Bool = false) {
+            self.id = id
+            self.title = title
+            self.description = description
+            self.type = type
+            self.isCompleted = isCompleted
+        }
 }
 
 struct SocialTask: TaskDetail {
@@ -37,4 +55,12 @@ struct SocialTask: TaskDetail {
     var description: String
     var type = "Social"
     var isCompleted = false
+    
+    public init(id: UUID = UUID(), title: String, description: String, type: String = "Work", isCompleted: Bool = false) {
+            self.id = id
+            self.title = title
+            self.description = description
+            self.type = type
+            self.isCompleted = isCompleted
+        }
 }
