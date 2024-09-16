@@ -14,4 +14,6 @@ My program currently has 5 views (technically 4 views as the TaskListView is onl
           
    - AddTaskView: Display the view in which you can insert the necessary details related to the task, such as name and description, and choose its category to add to the main task list. Includes a warning when either the name or description field is empty.
   
-   - CompletedTaskView: Display all of the completed tasks that have been marked by the user. Clicking on any of the task will prompt a TaskDetailView for the task in the same way that TaskListView does. 
+   - CompletedTaskView: Display all of the completed tasks that have been marked by the user. Clicking on any of the task will prompt a TaskDetailView for the task in the same way that TaskListView does.
+
+Currently it's only running properly on iOS, so if you're planning to simulate this program, please use an iPhone to simulate the program (I have not adapt the program to iPad dimensions, so this app may not display properly on iPad)
