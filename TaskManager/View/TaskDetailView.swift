@@ -42,7 +42,7 @@ struct TaskDetailView: View {
                 HStack {
                     Spacer()
                     Button(action: {
-                        viewModel.markTaskAsComplete(task)
+                        viewModel.markTaskAsComplete(task as! TaskWrapper)
                     }) {
                         Text("Mark as Complete")
                             .padding()
@@ -53,7 +53,7 @@ struct TaskDetailView: View {
                     .padding(.bottom, 20)
                     Spacer()
                     Button(action: {
-                        viewModel.removeTask(task)
+                        viewModel.removeTask(task as! TaskWrapper)
                     }) {
                         Text("Remove")
                             .padding()

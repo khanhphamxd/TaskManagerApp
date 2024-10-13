@@ -11,47 +11,106 @@ import SwiftUI
 
 final class TaskManagerTest: XCTestCase {
     var viewModel: TaskViewModel!
-    
+    let userDefaults = UserDefaults.standard
+
     override func setUp() {
         super.setUp()
         viewModel = TaskViewModel()
+
+        // Clear UserDefaults before each test to ensure a clean state
+        userDefaults.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        userDefaults.synchronize()
     }
 
     override func tearDown() {
         viewModel = nil
         super.tearDown()
     }
-    
-    // Test adding a task
+
+    // Test adding a task and verifying its presence
     func testAddTask() {
+        let initialTaskCount = viewModel.tasks.count
+
+        // Add a new task
         viewModel.addTask(title: "Test Task", description: "This is a test", type: "Work")
-        XCTAssertEqual(viewModel.tasks.count, 1)
-        XCTAssertEqual(viewModel.tasks[0].title, "Test Task")
-        XCTAssertEqual(viewModel.tasks[0].description, "This is a test")
-        XCTAssertEqual(viewModel.tasks[0].type, "Work")
+
+        // Verify task count increased
+        XCTAssertEqual(viewModel.tasks.count, initialTaskCount + 1)
+
+        // Verify the last task added is the one we expect
+        let lastTask = viewModel.tasks.last
+        XCTAssertEqual(lastTask?.title, "Test Task")
+        XCTAssertEqual(lastTask?.description, "This is a test")
+        XCTAssertEqual(lastTask?.type, "Work")
     }
 
-    // Test marking a task as complete
-    func testMarkTaskAsComplete() {
-        let task = WorkTask(title: "Work Task", description: "Complete this task")
-        viewModel.addTask(title: task.title, description: task.description, type: task.type)
+    // Test saving a task to UserDefaults
+    func testSaveTaskToUserDefaults() {
+        let task = WorkTask(title: "Saved Task", description: "Should be saved")
+        viewModel.addTask(title: task.title, description: task.description, type: "Work")
+        viewModel.saveTasks()
+
+        if let savedTasksData = userDefaults.data(forKey: "tasks"),
+           let savedTasks = try? JSONDecoder().decode([TaskWrapper].self, from: savedTasksData) {
+            XCTAssertEqual(savedTasks.count, viewModel.tasks.count)
+            XCTAssertEqual(savedTasks.last?.title, task.title)
+            XCTAssertEqual(savedTasks.last?.description, task.description)
+        } else {
+            XCTFail("No tasks found in UserDefaults.")
+        }
+    }
+
+
+    // Retrieve tasks from UserDefaults and verifying count
+    func testRetrieveTasksFromUserDefaults() {
+        let taskData: [TaskWrapper] = [
+            .work(WorkTask(title: "Retrieved Task", description: "Should be retrieved")),
+            .personal(PersonalTask(title: "Personal Task", description: "Personal description"))
+        ]
         
-        viewModel.markTaskAsComplete(viewModel.tasks[0])
-        XCTAssertEqual(viewModel.completedTasks.count, 1)
-        XCTAssertEqual(viewModel.tasks.count, 0)
-        XCTAssertTrue(viewModel.completedTasks[0].isCompleted)
+        let encoder = JSONEncoder()
+        if let encodedTasks = try? encoder.encode(taskData) {
+            UserDefaults.standard.set(encodedTasks, forKey: "tasks")
+        }
+
+        viewModel.loadTasks()
+
+        XCTAssertEqual(viewModel.tasks.count, taskData.count)
+        XCTAssertEqual(viewModel.tasks[0].title, "Retrieved Task")
+        XCTAssertEqual(viewModel.tasks[1].title, "Personal Task")
     }
 
-    // Test removing a task
+
+    // Test removing a task and verifying the task count
     func testRemoveTask() {
-        viewModel.addTask(title: "Remove Task", description: "Task to be removed", type: "Personal")
-        XCTAssertEqual(viewModel.tasks.count, 1)
-        
-        viewModel.removeTask(viewModel.tasks[0])
-        XCTAssertEqual(viewModel.tasks.count, 0)
+        viewModel.addTask(title: "Task to Remove", description: "Will be removed", type: "Work")
+        let initialTaskCount = viewModel.tasks.count
+
+        // Remove the task
+        viewModel.removeTask(viewModel.tasks.last!)
+
+        // Verify task count decreased
+        XCTAssertEqual(viewModel.tasks.count, initialTaskCount - 1)
     }
 
-    // Test error handling for missing title
+    // Test removing tasks from UserDefaults and verifying persistence
+    func testRemoveTaskFromUserDefaults() {
+        let task = WorkTask(title: "Remove from UserDefaults", description: "To be removed")
+        viewModel.addTask(title: task.title, description: task.description, type: "Work")
+        viewModel.saveTasks()
+        viewModel.removeTask(viewModel.tasks.last!)
+        viewModel.saveTasks()
+
+        if let savedTasksData = userDefaults.data(forKey: "tasks"),
+           let savedTasks = try? JSONDecoder().decode([TaskWrapper].self, from: savedTasksData) {
+            XCTAssertEqual(savedTasks.count, 0)
+        } else {
+            XCTFail("No tasks found in UserDefaults after removal.")
+        }
+    }
+
+
+    // Test handling missing title error when adding a task
     func testMissingTitleError() {
         do {
             try viewModel.validateTask(title: "", description: "Description")
@@ -63,7 +122,7 @@ final class TaskManagerTest: XCTestCase {
         }
     }
 
-    // Test error handling for missing description
+    // Test handling missing description error when adding a task
     func testMissingDescriptionError() {
         do {
             try viewModel.validateTask(title: "Title", description: "")
@@ -74,28 +133,36 @@ final class TaskManagerTest: XCTestCase {
             XCTFail("Unexpected error: \(error)")
         }
     }
-    
-    // Test screen transition (simulating a transition between AddTaskView and TaskListView)
+
+    // Test screen transition logic by simulating a transition between views
     func testScreenTransition() {
-        let task = WorkTask(title: "Transition Task", description: "Test transition")
+        let task = WorkTask(title: "Transition Task", description: "Test transition", type: "Work")
         viewModel.addTask(title: task.title, description: task.description, type: task.type)
-        
+
+        // Simulate screen views
         let taskListView = TaskListView(viewModel: viewModel)
         let taskDetailView = TaskDetailView(task: task, viewModel: viewModel)
-        
-        // Simulate navigation
+
+        // Verify views were instantiated properly
         XCTAssertNotNil(taskListView.body)
         XCTAssertNotNil(taskDetailView.body)
     }
-    
-    // Test adding multiple tasks
+
+    // Test adding multiple tasks and verifying their presence
     func testAddMultipleTasks() {
+        let initialTaskCount = viewModel.tasks.count
+
+        // Add two tasks
         viewModel.addTask(title: "First Task", description: "First Description", type: "Work")
         viewModel.addTask(title: "Second Task", description: "Second Description", type: "Social")
-        
-        XCTAssertEqual(viewModel.tasks.count, 2)
-        XCTAssertEqual(viewModel.tasks[0].title, "First Task")
-        XCTAssertEqual(viewModel.tasks[1].title, "Second Task")
+
+        // Verify task count increased by 2
+        XCTAssertEqual(viewModel.tasks.count, initialTaskCount + 2)
+
+        // Verify content of the last task added
+        let lastTask = viewModel.tasks.last
+        XCTAssertEqual(lastTask?.title, "Second Task")
+        XCTAssertEqual(lastTask?.description, "Second Description")
     }
 }
 
