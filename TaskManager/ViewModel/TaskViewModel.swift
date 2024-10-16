@@ -20,8 +20,13 @@ class TaskViewModel: ObservableObject {
         }
     }
 
+    private let networkManager: NetworkManager
+
+    // Initialize with NetworkManager
     init() {
+        self.networkManager = NetworkManager(url: "https://hbwjhhzjfluexwgtbrny.supabase.co", key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhid2poaHpqZmx1ZXh3Z3Ricm55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5NTMzNjIsImV4cCI6MjA0NDUyOTM2Mn0.mTPlFifMlhZ5rhf5_Ib6ycun7nibgrxVs89wcMOtMM4") // Initialize NetworkManager
         loadTasks()
+        fetchTasksFromSupabase() // Fetch tasks from Supabase during initialization
     }
 
     func validateTask(title: String, description: String) throws {
@@ -33,7 +38,7 @@ class TaskViewModel: ObservableObject {
         }
     }
     
-    func addTask(title: String, description: String, type: String) {
+    func addTask(title: String, description: String, type: String, completion: ((Bool) -> Void)? = nil) {
         let task: TaskWrapper
         switch type {
         case "Work":
@@ -43,10 +48,31 @@ class TaskViewModel: ObservableObject {
         case "Social":
             task = .social(SocialTask(title: title, description: description))
         default:
+            completion?(false)
             return
         }
-        tasks.append(task)
+        
+        // Add the task locally first
+        self.tasks.append(task)
+        
+        // Then attempt to add the task to the Supabase database
+        networkManager.addTask(task) { success in
+            DispatchQueue.main.async {
+                if success {
+                    // Optionally confirm success here
+                    completion?(true)
+                } else {
+                    // Revert local addition in case of failure
+                    if let index = self.tasks.firstIndex(where: { $0.id == task.id }) {
+                        self.tasks.remove(at: index)
+                    }
+                    completion?(false)
+                }
+            }
+        }
     }
+
+
 
     func markTaskAsComplete(_ task: TaskWrapper) {
         if let index = tasks.firstIndex(where: { $0.id == task.id }) {
@@ -70,6 +96,7 @@ class TaskViewModel: ObservableObject {
         return completedTasks
     }
 
+    // Save tasks to local storage
     func saveTasks() {
         let encoder = JSONEncoder()
         if let encodedTasks = try? encoder.encode(tasks) {
@@ -80,6 +107,7 @@ class TaskViewModel: ObservableObject {
         }
     }
 
+    // Load tasks from local storage
     func loadTasks() {
         let decoder = JSONDecoder()
         if let savedTasksData = UserDefaults.standard.data(forKey: "tasks"),
@@ -91,5 +119,19 @@ class TaskViewModel: ObservableObject {
             self.completedTasks = decodedCompletedTasks
         }
     }
-
+    
+    // Fetch tasks from Supabase and merge with local tasks
+    func fetchTasksFromSupabase() {
+        networkManager.fetchTasks { fetchedTasks in
+            if let fetchedTasks = fetchedTasks {
+                DispatchQueue.main.async {
+                    // Merge remote tasks with local tasks, avoiding duplicates
+                    let localTaskIDs = self.tasks.map { $0.id }
+                    let nonDuplicateTasks = fetchedTasks.filter { !localTaskIDs.contains($0.id) }
+                    self.tasks.append(contentsOf: nonDuplicateTasks)
+                    self.saveTasks() // Save merged tasks to local storage
+                }
+            }
+        }
+    }
 }

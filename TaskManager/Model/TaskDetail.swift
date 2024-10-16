@@ -17,7 +17,7 @@ protocol TaskDetail: Identifiable, Codable {
     init(id: UUID, title: String, description: String, type: String, isCompleted: Bool)
 }
 
-struct WorkTask: TaskDetail {
+struct WorkTask:    TaskDetail {
     var id = UUID()
     var title: String
     var description: String

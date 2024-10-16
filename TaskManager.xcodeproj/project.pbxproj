@@ -30,8 +30,10 @@
 		FB5942062CBB777100D235BC /* TaskWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5942052CBB777100D235BC /* TaskWrapper.swift */; };
 		FB59420B2CBBB02200D235BC /* TaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB49FC7F2C92D5AC0034A06A /* TaskViewModel.swift */; };
 		FB59420C2CBBB03500D235BC /* TaskWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5942052CBB777100D235BC /* TaskWrapper.swift */; };
-		FB59420D2CBBB03E00D235BC /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5EDF552C95508700EA2733 /* TaskManager.swift */; };
-		FB5EDF562C95508700EA2733 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5EDF552C95508700EA2733 /* TaskManager.swift */; };
+		FB5942102CBBE42B00D235BC /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB59420F2CBBE42B00D235BC /* NetworkManager.swift */; };
+		FB5942132CBDFDFC00D235BC /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = FB5942122CBDFDFC00D235BC /* Supabase */; };
+		FB5942162CBDFE5B00D235BC /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = FB5942152CBDFE5B00D235BC /* Supabase */; };
+		FB5942172CBE320800D235BC /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB59420F2CBBE42B00D235BC /* NetworkManager.swift */; };
 		FB5EDF582C9550A800EA2733 /* CompletedTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5EDF572C9550A800EA2733 /* CompletedTaskView.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,7 +64,7 @@
 		FB5941F22C97FCCA00D235BC /* TaskManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerTest.swift; sourceTree = "<group>"; };
 		FB5941F42C97FCCB00D235BC /* TaskManagerTestLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerTestLaunchTests.swift; sourceTree = "<group>"; };
 		FB5942052CBB777100D235BC /* TaskWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWrapper.swift; sourceTree = "<group>"; };
-		FB5EDF552C95508700EA2733 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
+		FB59420F2CBBE42B00D235BC /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		FB5EDF572C9550A800EA2733 /* CompletedTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTaskView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB5942132CBDFDFC00D235BC /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB5942162CBDFE5B00D235BC /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +94,7 @@
 				FB49FC6D2C92D53F0034A06A /* TaskManager */,
 				FB5941F12C97FCCA00D235BC /* TaskManagerTest */,
 				FB49FC6C2C92D53F0034A06A /* Products */,
+				FB5942142CBDFE5400D235BC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,6 +110,7 @@
 		FB49FC6D2C92D53F0034A06A /* TaskManager */ = {
 			isa = PBXGroup;
 			children = (
+				FB59420E2CBBE41D00D235BC /* Network */,
 				FB59420A2CBB77BF00D235BC /* View */,
 				FB5942092CBB77B700D235BC /* ViewModel */,
 				FB5942082CBB77AD00D235BC /* Model */,
@@ -154,7 +160,6 @@
 			isa = PBXGroup;
 			children = (
 				FB49FC7F2C92D5AC0034A06A /* TaskViewModel.swift */,
-				FB5EDF552C95508700EA2733 /* TaskManager.swift */,
 				FB5942052CBB777100D235BC /* TaskWrapper.swift */,
 			);
 			path = ViewModel;
@@ -170,6 +175,21 @@
 				FB5EDF572C9550A800EA2733 /* CompletedTaskView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		FB59420E2CBBE41D00D235BC /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				FB59420F2CBBE42B00D235BC /* NetworkManager.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		FB5942142CBDFE5400D235BC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,6 +208,9 @@
 			dependencies = (
 			);
 			name = TaskManager;
+			packageProductDependencies = (
+				FB5942122CBDFDFC00D235BC /* Supabase */,
+			);
 			productName = TaskManager;
 			productReference = FB49FC6B2C92D53F0034A06A /* TaskManager.app */;
 			productType = "com.apple.product-type.application";
@@ -206,6 +229,9 @@
 				FB5941F72C97FCCB00D235BC /* PBXTargetDependency */,
 			);
 			name = TaskManagerTest;
+			packageProductDependencies = (
+				FB5942152CBDFE5B00D235BC /* Supabase */,
+			);
 			productName = TaskManagerTest;
 			productReference = FB5941F02C97FCCA00D235BC /* TaskManagerTest.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -217,6 +243,9 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					New,
+				);
 				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1530;
 				TargetAttributes = {
@@ -238,6 +267,9 @@
 				Base,
 			);
 			mainGroup = FB49FC622C92D53F0034A06A;
+			packageReferences = (
+				FB5942112CBDFDFB00D235BC /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			productRefGroup = FB49FC6C2C92D53F0034A06A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -272,9 +304,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB5942102CBBE42B00D235BC /* NetworkManager.swift in Sources */,
 				FB5942062CBB777100D235BC /* TaskWrapper.swift in Sources */,
 				FB5EDF582C9550A800EA2733 /* CompletedTaskView.swift in Sources */,
-				FB5EDF562C95508700EA2733 /* TaskManager.swift in Sources */,
 				FB49FC712C92D53F0034A06A /* ContentView.swift in Sources */,
 				FB49FC822C92D5CE0034A06A /* AddTaskView.swift in Sources */,
 				FB49FC802C92D5AC0034A06A /* TaskViewModel.swift in Sources */,
@@ -293,7 +325,7 @@
 				FB59420B2CBBB02200D235BC /* TaskViewModel.swift in Sources */,
 				FB5942032C9806F200D235BC /* CompletedTaskView.swift in Sources */,
 				FB5941FB2C9806D100D235BC /* TaskManagerApp.swift in Sources */,
-				FB59420D2CBBB03E00D235BC /* TaskManager.swift in Sources */,
+				FB5942172CBE320800D235BC /* NetworkManager.swift in Sources */,
 				FB5942012C9806EB00D235BC /* TaskListView.swift in Sources */,
 				FB59420C2CBBB03500D235BC /* TaskWrapper.swift in Sources */,
 				FB5941FF2C9806E500D235BC /* ContentView.swift in Sources */,
@@ -574,6 +606,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FB5942112CBDFDFB00D235BC /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FB5942122CBDFDFC00D235BC /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB5942112CBDFDFB00D235BC /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		FB5942152CBDFE5B00D235BC /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB5942112CBDFDFB00D235BC /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FB49FC632C92D53F0034A06A /* Project object */;
 }

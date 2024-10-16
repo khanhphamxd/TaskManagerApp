@@ -12,22 +12,23 @@ import SwiftUI
 final class TaskManagerTest: XCTestCase {
     var viewModel: TaskViewModel!
     let userDefaults = UserDefaults.standard
+    var networkManager: NetworkManager!
 
     override func setUp() {
         super.setUp()
         viewModel = TaskViewModel()
 
-        // Clear UserDefaults before each test to ensure a clean state
         userDefaults.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
         userDefaults.synchronize()
     }
 
     override func tearDown() {
         viewModel = nil
+        networkManager = nil
         super.tearDown()
     }
 
-    // Test adding a task and verifying its presence
+    // Test adding a task
     func testAddTask() {
         let initialTaskCount = viewModel.tasks.count
 
@@ -60,8 +61,7 @@ final class TaskManagerTest: XCTestCase {
         }
     }
 
-
-    // Retrieve tasks from UserDefaults and verifying count
+    // Retrieve tasks from UserDefaults and verify task count
     func testRetrieveTasksFromUserDefaults() {
         let taskData: [TaskWrapper] = [
             .work(WorkTask(title: "Retrieved Task", description: "Should be retrieved")),
@@ -80,7 +80,6 @@ final class TaskManagerTest: XCTestCase {
         XCTAssertEqual(viewModel.tasks[1].title, "Personal Task")
     }
 
-
     // Test removing a task and verifying the task count
     func testRemoveTask() {
         viewModel.addTask(title: "Task to Remove", description: "Will be removed", type: "Work")
@@ -93,7 +92,7 @@ final class TaskManagerTest: XCTestCase {
         XCTAssertEqual(viewModel.tasks.count, initialTaskCount - 1)
     }
 
-    // Test removing tasks from UserDefaults and verifying persistence
+    // Test removing tasks from UserDefaults
     func testRemoveTaskFromUserDefaults() {
         let task = WorkTask(title: "Remove from UserDefaults", description: "To be removed")
         viewModel.addTask(title: task.title, description: task.description, type: "Work")
@@ -108,7 +107,6 @@ final class TaskManagerTest: XCTestCase {
             XCTFail("No tasks found in UserDefaults after removal.")
         }
     }
-
 
     // Test handling missing title error when adding a task
     func testMissingTitleError() {
@@ -164,5 +162,42 @@ final class TaskManagerTest: XCTestCase {
         XCTAssertEqual(lastTask?.title, "Second Task")
         XCTAssertEqual(lastTask?.description, "Second Description")
     }
-}
 
+    // MARK: - Supabase Integration Tests
+
+    // Test adding a task to Supabase
+    func testAddTaskToSupabase() {
+        let taskTitle = "Supabase Task"
+        let taskDescription = "Task to be added to Supabase"
+        
+        let expectation = XCTestExpectation(description: "Add task to Supabase")
+        
+        viewModel.addTask(title: taskTitle, description: taskDescription, type: "Work")
+
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            self.viewModel.fetchTasksFromSupabase()
+            
+            XCTAssertEqual(self.viewModel.tasks.last?.title, taskTitle)
+            XCTAssertEqual(self.viewModel.tasks.last?.description, taskDescription)
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    // Test fetching tasks from Supabase
+    func testFetchTasksFromSupabase() {
+        let expectation = XCTestExpectation(description: "Fetch tasks from Supabase")
+        
+        viewModel.fetchTasksFromSupabase()
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            // Wait for tasks to be fetched (active after 2s)
+            XCTAssertFalse(self.viewModel.tasks.isEmpty, "Expected tasks to be fetched from Supabase but got an empty array.")
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+}
